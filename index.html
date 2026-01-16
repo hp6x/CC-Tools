@@ -1,0 +1,2795 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carding Tools by hp6x</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+    :root {
+      --primary-gradient: linear-gradient(135deg, #27272a, #3f3f46);
+      --secondary-gradient: linear-gradient(135deg, #18181b, #27272a);
+      --card-gradient: linear-gradient(135deg, #18181b, #27272a);
+      --button-gradient: linear-gradient(135deg, #27272a, #3f3f46);
+      --transition-speed: 0.3s;
+      --bin-gradient: linear-gradient(135deg, #27272a, #3f3f46);
+      --generator-gradient: linear-gradient(135deg, #27272a, #3f3f46);
+      --checker-gradient: linear-gradient(135deg, #27272a, #3f3f46);
+      --bin-generator-gradient: linear-gradient(135deg, #27272a, #3f3f46);
+    }
+
+    html {
+      zoom: 0.9;
+    }
+
+    a {
+      cursor: default;
+    }
+
+    * {
+      box-sizing: border-box;
+      transition: all var(--transition-speed) ease;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    input,
+    textarea {
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+      user-select: text;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #000000;
+      color: #e5e7eb;
+      margin: 0;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+      justify-content: center;
+      /* Center vertically by default */
+    }
+
+    /* When multiple cards or tools are shown, we might need to adjust, but flex column center usually handles it well if content is small. 
+       If content grows, it just scrolls. */
+    .container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      /* Ensure container content is centered */
+      max-width: 1100px;
+      width: 100%;
+      padding: 0 10px;
+    }
+
+    /* Custom Dropdown Styles */
+    .custom-select-wrapper {
+      position: relative;
+      user-select: none;
+      width: auto;
+      display: inline-block;
+    }
+
+    .custom-select {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .custom-select__trigger {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+      /* Smaller padding */
+      font-size: 12px;
+      /* Smaller font */
+      font-weight: 500;
+      color: #e5e7eb;
+      background: rgba(9, 9, 11, 0.4);
+      border: 1px solid rgba(148, 163, 184, 0.32);
+      border-radius: 8px;
+      cursor: default;
+      /* Default cursor */
+      transition: all 0.2s ease;
+      min-width: 100px;
+      /* Smaller min-width */
+      height: 32px;
+      /* Smaller height */
+    }
+
+    .custom-select__trigger:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.38);
+    }
+
+    .custom-select__trigger span {
+      margin-right: 10px;
+    }
+
+    .arrow {
+      position: relative;
+      height: 10px;
+      width: 10px;
+    }
+
+    .arrow::before,
+    .arrow::after {
+      content: "";
+      position: absolute;
+      bottom: 0px;
+      width: 0.15rem;
+      height: 100%;
+      transition: all 0.2s;
+    }
+
+    .arrow::before {
+      left: -3px;
+      transform: rotate(-45deg);
+      background-color: #94a3b8;
+    }
+
+    .arrow::after {
+      left: 3px;
+      transform: rotate(45deg);
+      background-color: #94a3b8;
+    }
+
+    .open .arrow::before {
+      left: -3px;
+      transform: rotate(45deg);
+    }
+
+    .open .arrow::after {
+      left: 3px;
+      transform: rotate(-45deg);
+    }
+
+    .custom-options {
+      position: absolute;
+      display: block;
+      top: 100%;
+      left: 0;
+      right: 0;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      background: #18181b;
+      transition: all 0.2s ease;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(-10px);
+      z-index: 100;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+
+    .custom-select.open .custom-options {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: all;
+      transform: translateY(0);
+    }
+
+    .custom-option {
+      position: relative;
+      display: block;
+      padding: 8px 10px;
+      /* Smaller padding */
+      font-size: 12px;
+      /* Smaller font */
+      font-weight: 400;
+      color: #a1a1aa;
+      cursor: default;
+      /* Default cursor */
+      transition: all 0.2s;
+    }
+
+    .custom-option:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    .custom-option.selected {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+      font-weight: 500;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 24px;
+      font-weight: 600;
+      font-size: 1.8rem;
+      color: #e5e7eb;
+      letter-spacing: 1px;
+    }
+
+    @keyframes animateText {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: 0 0;
+      }
+    }
+
+    h2 {
+      font-weight: 500;
+      margin-top: 0;
+      margin-bottom: 12px;
+      color: #cbd5e1;
+      font-size: 1.2rem;
+      padding-left: 0;
+      text-align: center;
+      /* Center titles */
+    }
+
+    .container {
+      max-width: 1100px;
+      width: 100%;
+      padding: 0 10px;
+    }
+
+    /* Top bar */
+    /* Top bar */
+    /* Top bar */
+    .topbar {
+      width: 100%;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #000000;
+      border-bottom: none;
+      margin-bottom: 16px;
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #e5e7eb;
+      font-weight: 600;
+      letter-spacing: .2px;
+    }
+
+    .brand svg {
+      width: 18px;
+      height: 18px;
+      stroke: #94a3b8;
+    }
+
+    .brand img {
+      width: 52px;
+      height: 52px;
+      display: block;
+    }
+
+    .brand a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      text-decoration: none;
+      cursor: default;
+    }
+
+    .brand img:hover {
+      transform: scale(1.08);
+      filter: drop-shadow(0 4px 14px rgba(148, 163, 184, 0.25));
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      color: #cbd5e1;
+    }
+
+    .nav-spacer {
+      display: inline-block;
+      width: 1px;
+      height: 16px;
+      background: rgba(255, 255, 255, 0.1);
+      margin: 0 12px;
+      vertical-align: middle;
+    }
+
+    .nav a {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+      padding: 6px 10px;
+      border-radius: 6px;
+    }
+
+    .nav a:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .spacer {
+      flex: 1;
+    }
+
+    .icon-btn {
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      background: #0e1626;
+      color: #cbd5e1;
+      padding: 6px 8px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn svg {
+      width: 16px;
+      height: 16px;
+      stroke: #9aa6b2;
+    }
+
+    .icon-btn:hover {
+      border-color: rgba(255, 255, 255, 0.22);
+      background: #0b1220;
+    }
+
+    .separator {
+      width: 1px;
+      height: 20px;
+      background: rgba(148, 163, 184, 0.18);
+      margin: 0 10px;
+    }
+
+    .settings-btn {
+      color: #cbd5e1;
+      text-decoration: none;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      background: #0e1626;
+    }
+
+    .settings-btn:hover {
+      background: #0b1220;
+      border-color: rgba(255, 255, 255, 0.22);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 6px 0;
+      margin-bottom: 6px;
+    }
+
+    .hero h1 {
+      display: block;
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0 0 8px 0;
+      letter-spacing: 0.3px;
+      background: linear-gradient(135deg, #e5e7eb, #94a3b8);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      display: block;
+      color: #9aa6b2;
+      margin: 0;
+      font-size: 0.95rem;
+    }
+
+    .hero {
+      width: 100%;
+      max-width: 1100px;
+      margin: 6px auto 10px;
+    }
+
+    .hero-card {
+      background: radial-gradient(1200px 200px at 20% -10%, rgba(99, 102, 241, 0.08), transparent),
+        radial-gradient(900px 160px at 80% -20%, rgba(16, 185, 129, 0.06), transparent),
+        rgba(24, 24, 27, 0.35);
+      border: 1px solid rgba(39, 39, 42, 0.35);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Tools list (stack vertically) */
+    .tools {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 16px;
+      width: 100%;
+    }
+
+    .tool-button {
+      text-align: left;
+      padding: 14px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tool-button::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(120px 60px at var(--mx, -10px) var(--my, -10px), rgba(255, 255, 255, 0.06), transparent 60%);
+      opacity: 0;
+      transition: opacity .25s ease;
+      pointer-events: none;
+    }
+
+    .tool-button:hover::after {
+      opacity: 1;
+    }
+
+    .tool-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .tool-title {
+      color: #e5e7eb;
+      font-weight: 600;
+      font-size: 0.98rem;
+    }
+
+    .tool-desc {
+      color: #9aa6b2;
+      font-size: 0.84rem;
+    }
+
+    .card {
+      background: rgba(24, 24, 27, 0.15);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 24px;
+      margin: 0 auto 20px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(39, 39, 42, 0.35);
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .card p {
+      color: rgba(161, 161, 170, 0.7);
+    }
+
+    .back-arrow {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      cursor: default;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+
+    .back-arrow:hover {
+      transform: translateX(-5px);
+      color: #a78bfa;
+      background: rgba(30, 41, 59, 0.8);
+    }
+
+    button {
+      background: rgba(9, 9, 11, 0.6);
+      color: #e5e7eb;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: default;
+      font-size: 13px;
+      margin-right: 8px;
+      margin-top: 8px;
+      transition: background 0.2s ease, border-color 0.2s ease;
+      font-weight: 500;
+      box-shadow: none;
+      letter-spacing: 0.2px;
+      touch-action: manipulation;
+    }
+
+    button:hover {
+      background: #111827;
+      border-color: rgba(148, 163, 184, 0.35);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    /* Enforce neutral button styling (override any inline gradients) */
+    button {
+      background: rgba(9, 9, 11, 0.6) !important;
+      border: 1px solid rgba(148, 163, 184, 0.28) !important;
+      color: #e5e7eb !important;
+    }
+
+    button:hover {
+      background: rgba(255, 255, 255, 0.05) !important;
+      border-color: rgba(255, 255, 255, 0.35) !important;
+    }
+
+    /* Hide back arrows on all cards */
+    .back-arrow {
+      display: none !important;
+    }
+
+    /* Unified monochrome button hover */
+    /* Unified monochrome button hover */
+    /* Primary actions: purple highlight on hover */
+    button[onclick*="generate"]:hover,
+    button[onclick*="checkBIN"]:hover,
+    button[onclick*="checkCards"]:hover {
+      box-shadow: 0 0 0 2px rgba(161, 161, 170, 0.22);
+      border-color: rgba(161, 161, 170, 0.55) !important;
+      background: rgba(255, 255, 255, 0.06) !important;
+    }
+
+    /* Other buttons: grey highlight on hover */
+    button:not([onclick*="generate"]):not([onclick*="checkBIN"]):not([onclick*="checkCards"]):not([onclick*="clear"]):hover {
+      box-shadow: 0 0 0 2px rgba(161, 161, 170, 0.2);
+      border-color: rgba(161, 161, 170, 0.5) !important;
+      background: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    /* Clear buttons: red glow on hover */
+    button[onclick*="clear"]:hover {
+      box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.25), 0 0 12px rgba(239, 68, 68, 0.35);
+      border-color: rgba(239, 68, 68, 0.55) !important;
+      background: rgba(239, 68, 68, 0.1) !important;
+    }
+
+    /* Modern selects */
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      color: #e5e7eb;
+      padding: 6px 10px;
+      padding-right: 30px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(2, 6, 23, 0.35) inset;
+      font-size: 12px;
+      cursor: default;
+    }
+
+    select:hover {
+      border-color: #a1a1aa;
+      background: rgba(15, 23, 42, 0.6);
+    }
+
+    select:focus {
+      outline: none;
+      border-color: #8b5cf6;
+      box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.25);
+    }
+
+    option {
+      background: #09090b;
+      color: #a1a1aa;
+    }
+
+    /* Smaller, modern module select */
+    /* Smaller, modern module select */
+    #cc-module-select {
+      font-size: 12px;
+      padding: 6px 10px;
+      width: auto;
+      background-color: rgba(9, 9, 11, 0.4);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(148, 163, 184, 0.32);
+      color: #e5e7eb;
+      border-radius: 8px;
+      cursor: default;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    #bin-source-select {
+      font-size: 12px;
+      padding: 6px 10px;
+      width: auto;
+      background-color: rgba(9, 9, 11, 0.4);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(148, 163, 184, 0.32);
+      color: #e5e7eb;
+      border-radius: 8px;
+      cursor: default;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    #cc-module-select:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.38);
+      transform: translateY(-1px);
+    }
+
+    #bin-source-select:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.38);
+      transform: translateY(-1px);
+    }
+
+    .module-select-container {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    /* Result areas: make copy/download UI non-default */
+    .result-card button,
+    #generator-results button,
+    #multi-generator-results button,
+    #bin-generator-results button {
+      border-radius: 9999px !important;
+      padding: 8px 14px !important;
+    }
+
+    textarea[readonly] {
+      background: rgba(9, 9, 11, 0.6) !important;
+      border: 1px solid rgba(39, 39, 42, 0.5) !important;
+      color: #a1a1aa !important;
+      border-radius: 10px !important;
+      resize: vertical;
+    }
+
+    /* Hide number input arrows */
+    input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+
+    .tools {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 15px;
+      margin-top: 25px;
+      width: 100%;
+    }
+
+    .tool-button {
+      padding: 15px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: default;
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .tool-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      transition: transform 0.5s;
+      z-index: -1;
+    }
+
+    .tool-button:hover::before {
+      transform: translateX(100%);
+    }
+
+    .tool-button:hover {
+      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .bin-checker,
+    .card-generator,
+    .card-checker,
+    .bin-generator {
+      background: #18181b;
+      border: 1px solid #27272a;
+    }
+
+    textarea {
+      width: 100%;
+      max-width: 100%;
+      height: 120px;
+      background-color: rgba(9, 9, 11, 0.6);
+      color: #a1a1aa;
+      border: 1px solid rgba(39, 39, 42, 0.5);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: 'Inter', 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      resize: vertical;
+      font-size: 13px;
+      box-shadow: none;
+      outline: none;
+    }
+
+    ::placeholder {
+      color: rgba(161, 161, 170, 0.4);
+    }
+
+    textarea:focus {
+      border-color: #71717a;
+      box-shadow: 0 0 0 2px rgba(113, 113, 122, 0.3);
+    }
+
+    input,
+    select {
+      background-color: rgba(9, 9, 11, 0.6);
+      color: #a1a1aa;
+      border: 1px solid rgba(39, 39, 42, 0.5);
+      border-radius: 8px;
+      padding: 10px;
+      font-family: 'Inter', 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      outline: none;
+      font-size: 13px;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #71717a;
+      box-shadow: 0 0 0 2px rgba(113, 113, 122, 0.3);
+    }
+
+    .date-inputs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+      align-items: flex-start;
+    }
+
+    .date-inputs div {
+      flex: 1;
+      min-width: 90px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .date-inputs label {
+      margin-bottom: 5px;
+      font-size: 13px;
+    }
+
+    .date-inputs input {
+      width: 100%;
+    }
+
+    .result-card {
+      background: rgba(24, 24, 27, 0.55);
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 15px;
+      border: 1px solid #27272a;
+      border-top: 3px solid #3f3f46;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .result-card h3 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #e4e4e7;
+      font-size: 1.2rem;
+    }
+
+    .result-card p {
+      margin: 5px 0;
+      font-size: 0.9rem;
+    }
+
+    /* Modern Bin Result Styles */
+    /* Enhanced Bin Result Styles */
+    .bin-result-card-modern {
+      background: #09090b;
+      /* Even darker background */
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 15px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8);
+      animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .bin-result-card-modern::before {
+      display: none;
+      /* Remove colored top border */
+    }
+
+    .bin-header-modern {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .bin-number-modern {
+      font-family: 'Inter', monospace;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+    }
+
+    .bin-brand-icon {
+      height: 30px;
+      width: auto;
+      opacity: 0.8;
+    }
+
+    .bin-grid-modern {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .bin-item-modern {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      transition: transform 0.2s;
+    }
+
+    .bin-item-modern:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .bin-label-modern {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #64748b;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .bin-value-modern {
+      font-size: 1rem;
+      color: #e2e8f0;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bin-flag {
+      font-size: 1.2rem;
+    }
+
+    .badge-scheme {
+      background: #3f3f46;
+      /* Grey badge */
+      color: #e4e4e7;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      box-shadow: none;
+      border: none;
+    }
+
+    .badge-type {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .badge-level {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .badge-country {
+      background: rgba(236, 72, 153, 0.15);
+      color: #f472b6;
+      border: 1px solid rgba(236, 72, 153, 0.2);
+    }
+
+    .badge-bank {
+      background: rgba(139, 92, 246, 0.15);
+      color: #a78bfa;
+      border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #main-screen,
+    #bin-checker-screen,
+    #card-generator-screen,
+    #card-checker-screen,
+    #bin-generator-screen {
+      opacity: 1;
+      transform: translateX(0);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      position: relative;
+      width: 100%;
+    }
+
+    #main-screen.hidden,
+    #bin-checker-screen.hidden,
+    #card-generator-screen.hidden,
+    #card-checker-screen.hidden,
+    #bin-generator-screen.hidden {
+      opacity: 0;
+      transform: translateX(-20px);
+      position: absolute;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .glow-effect {
+      position: relative;
+    }
+
+    .glow-effect::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: -3px;
+      right: -3px;
+      bottom: -3px;
+      background: var(--primary-gradient);
+      border-radius: 14px;
+      z-index: -1;
+      filter: blur(14px);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    /* Enhanced Bin Result Styles */
+    .bin-result-card-modern {
+      background: linear-gradient(145deg, rgba(30, 30, 35, 0.6), rgba(20, 20, 25, 0.8));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 15px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+      animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .bin-result-card-modern::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #8b5cf6, #ec4899);
+    }
+
+    .bin-header-modern {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .bin-number-modern {
+      font-family: 'Inter', monospace;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 2px;
+      text-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+    }
+
+    .bin-brand-icon {
+      height: 30px;
+      width: auto;
+      opacity: 0.8;
+    }
+
+    .bin-grid-modern {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .bin-item-modern {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      transition: transform 0.2s;
+    }
+
+    .bin-item-modern:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .bin-label-modern {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #64748b;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .bin-value-modern {
+      font-size: 1rem;
+      color: #e2e8f0;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bin-flag {
+      font-size: 1.2rem;
+    }
+
+    .glow-effect:hover::after {
+      opacity: 0.7;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .pulse {
+      animation: none;
+      border-radius: 10px;
+    }
+
+    .tool-icon {
+      margin-bottom: 6px;
+      opacity: 0.9;
+    }
+
+    .tool-icon svg {
+      width: 20px;
+      height: 20px;
+      display: block;
+      fill: none;
+      stroke: #94a3b8;
+      stroke-width: 1.75;
+    }
+
+    .tool-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-5px);
+      }
+
+      100% {
+        transform: translateY(0px);
+      }
+    }
+
+    .floating {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes spinner {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .loading-spinner {
+      display: block;
+      width: 36px;
+      height: 36px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #ffffff;
+      animation: spinner 1s linear infinite;
+      margin: 15px auto;
+    }
+
+    .loading-container {
+      text-align: center;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--color-primary-dark), var(--color-secondary));
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      color: white;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .loading-container p {
+      font-size: 0.9rem;
+      margin: 5px 0;
+    }
+
+    /* Toast notifications */
+    #toast-container {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 1000;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: transparent;
+      color: #ffffff;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      min-width: 0;
+      max-width: 420px;
+      box-shadow: none;
+      transform: translateY(10px);
+      opacity: 0;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      pointer-events: auto;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .card-checker-results {
+      margin-top: 15px;
+    }
+
+    .result-sections {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .result-section {
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .result-section h3 {
+      color: #cbd5e1;
+      margin-bottom: 10px;
+      font-size: 1.3rem;
+    }
+
+    .result-section.live h3 {
+      color: #22c55e;
+    }
+
+    .result-section.dead h3 {
+      color: #ef4444;
+    }
+
+    /* Modern scrollbar */
+    textarea::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    textarea::-webkit-scrollbar-track {
+      background: #0b0b0d;
+    }
+
+    textarea::-webkit-scrollbar-thumb {
+      background-color: #3a3a46;
+      border-radius: 10px;
+      border: 2px solid #0b0b0d;
+    }
+
+    .result-section .result-card {
+      margin-top: 8px;
+    }
+
+    .result-section.unknown {
+      flex: 100%;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      h1 {
+        font-size: 2.2rem;
+        margin-bottom: 20px;
+      }
+
+      h2 {
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+        padding-left: 60px;
+      }
+
+      .card {
+        padding: 15px;
+        margin-bottom: 15px;
+      }
+
+      .back-arrow {
+        top: 20px;
+        left: 20px;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+      }
+
+      button {
+        padding: 8px 14px;
+        font-size: 13px;
+        margin-right: 6px;
+        margin-top: 6px;
+      }
+
+      .tools {
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .tool-button {
+        padding: 12px;
+        font-size: 15px;
+      }
+
+      .tool-icon {
+        font-size: 20px;
+        margin-bottom: 4px;
+      }
+
+      textarea {
+        height: 100px;
+        font-size: 12px;
+        padding: 8px;
+      }
+
+      input,
+      select {
+        font-size: 12px;
+        padding: 8px;
+      }
+
+      .date-inputs {
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+
+      .date-inputs div {
+        min-width: 100%;
+      }
+
+      .date-inputs label {
+        font-size: 12px;
+        margin-bottom: 4px;
+      }
+
+      .result-card {
+        padding: 12px;
+        margin-top: 12px;
+      }
+
+      .result-card h3 {
+        font-size: 1.1rem;
+        margin-bottom: 6px;
+      }
+
+      .result-card p {
+        font-size: 0.85rem;
+      }
+
+      .result-sections {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .result-section {
+        min-width: 100%;
+      }
+
+      .loading-spinner {
+        width: 32px;
+        height: 32px;
+        margin: 10px auto;
+      }
+
+      .loading-container p {
+        font-size: 0.85rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="toast-container"></div>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <a href="#" onclick="showScreen('main-screen')" title="Go to Home">
+          <img src="icon.png" alt="Carding Tools" />
+        </a>
+      </div>
+      <div class="spacer"></div>
+      <div class="nav">
+        <a href="#gen" onclick="showScreen('card-generator-screen')">cc Generator</a>
+        <a href="#luhn" onclick="showScreen('card-checker-screen')">cc Checker</a>
+        <a href="#bin-gen" onclick="showScreen('bin-generator-screen')">Bin Generator</a>
+        <a href="#bin" onclick="showScreen('bin-checker-screen')">Bin Checker</a>
+        <span class="separator"></span>
+        <a href="#settings" onclick="showScreen('settings-screen')">Settings</a>
+      </div>
+    </div>
+
+    <div id="settings-screen" class="hidden">
+      <div class="card">
+        <button class="back-arrow" onclick="showScreen('main-screen')" title="Back to Main">←</button>
+        <h2>Settings</h2>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <section class="hero"></section>
+
+    <div id="main-screen">
+
+      <div id="tools" class="tools"
+        onmousemove="this.style.setProperty('--mx', event.offsetX + 'px'); this.style.setProperty('--my', event.offsetY + 'px');">
+        <div class="tool-button bin-checker glow-effect" onclick="showScreen('bin-checker-screen')">
+          <div class="tool-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="11" cy="11" r="7" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+          </div>
+          <div class="tool-meta">
+            <div class="tool-title">BIN Checker</div>
+            <div class="tool-desc" style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">Analyze BIN details</div>
+          </div>
+        </div>
+        <div class="tool-button card-generator glow-effect" onclick="showScreen('card-generator-screen')">
+          <div class="tool-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <polyline points="1 4 1 10 7 10" />
+              <polyline points="23 20 23 14 17 14" />
+              <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10" />
+              <path d="M3.51 15A9 9 0 0 0 18.36 18.36L23 14" />
+            </svg>
+          </div>
+          <div class="tool-meta">
+            <div class="tool-title">Card Generator</div>
+            <div class="tool-desc" style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">Generate valid numbers
+            </div>
+          </div>
+        </div>
+        <div class="tool-button card-checker glow-effect" onclick="showScreen('card-checker-screen')">
+          <div class="tool-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+          </div>
+          <div class="tool-meta">
+            <div class="tool-title">Card Checker</div>
+            <div class="tool-desc" style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">Validate card status
+            </div>
+          </div>
+        </div>
+        <div class="tool-button bin-generator glow-effect" onclick="showScreen('bin-generator-screen')">
+          <div class="tool-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="3" />
+              <path
+                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c0 .66.26 1.3.73 1.77.47.47 1.11.73 1.77.73H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z" />
+            </svg>
+          </div>
+          <div class="tool-meta">
+            <div class="tool-title">BIN Generator</div>
+            <div class="tool-desc" style="font-size: 0.8rem; color: #64748b; margin-top: 4px;">Create BIN patterns</div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+    <div id="bin-checker-screen" class="hidden">
+      <div class="card">
+        <button class="back-arrow" onclick="showScreen('main-screen')" title="Back to Main">←</button>
+        <h2>BIN Checker</h2>
+        <p></p>
+
+        <textarea id="bin-input" placeholder="Enter BIN numbers (separated by space, comma, or new lines)"></textarea>
+
+        <div style="display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; align-items:center;">
+          <button class="pulse" style="background: var(--bin-gradient);" onclick="checkBIN()">Check</button>
+          <button style="background: linear-gradient(135deg, #ef4444, #f87171);"
+            onclick="clearBINResults()">Clear</button>
+
+          <div class="custom-select-wrapper" style="margin-left: auto;">
+            <div class="custom-select">
+              <div class="custom-select__trigger"><span>CSV (Local)</span>
+                <div class="arrow"></div>
+              </div>
+              <div class="custom-options">
+                <span class="custom-option selected" data-value="csv">CSV</span>
+                <span class="custom-option" data-value="api">APi</span>
+              </div>
+            </div>
+            <select id="bin-source-select" style="display: none;">
+              <option value="csv" selected>CSV</option>
+              <option value="api">APi</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="bin-results"></div>
+      </div>
+    </div>
+
+    <div id="card-generator-screen" class="hidden">
+      <div class="card">
+        <button class="back-arrow" onclick="showScreen('main-screen')" title="Back to Main">←</button>
+        <h2>Card Generator</h2>
+
+        <div style="margin-bottom: 12px;">
+          <label>BIN:</label>
+          <input type="text" id="gen-bin" placeholder="e.g., 423456">
+        </div>
+
+        <div class="date-inputs">
+          <div>
+            <label>Month (MM):</label>
+            <input type="number" id="gen-mm" placeholder="Leave blank to randomize" min="1" max="12">
+          </div>
+          <div>
+            <label>Year (YY):</label>
+            <input type="number" id="gen-yy" placeholder="Leave blank to randomize" min="25" max="99">
+          </div>
+          <div>
+            <label>CVV:</label>
+            <input type="number" id="gen-cvv" placeholder="Leave blank to randomize" min="100" max="999">
+          </div>
+        </div>
+
+        <div style="margin-bottom: 12px;">
+          <label>Quantity:</label>
+          <input type="number" id="gen-quantity" value="10" min="1" max="100">
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;">
+          <button class="pulse" style="background: var(--generator-gradient);" onclick="generateCards()">Generate
+            Cards</button>
+          <button style="background: linear-gradient(135deg, #ef4444, #f87171);"
+            onclick="clearGeneratorResults()">Clear</button>
+        </div>
+
+        <div id="generator-results" class="hidden" style="margin-top: 15px;">
+          <h3>Generated Cards</h3>
+          <button class="pulse" style="background: linear-gradient(135deg, #4c1d95, #6d28d9);"
+            onclick="copyGeneratedCards()">Copy All</button>
+          <textarea id="generated-cards" readonly style="margin-top: 8px;"></textarea>
+        </div>
+      </div>
+
+      <div class="card">
+        <button class="back-arrow" onclick="showScreen('main-screen')" title="Back to Main">←</button>
+        <h2>Multiple Card Generator</h2>
+
+        <div style="margin-bottom: 12px;">
+          <label></label>
+          <textarea id="multi-gen-bins" placeholder="one per line"></textarea>
+        </div>
+
+        <div class="date-inputs">
+          <div>
+            <label>Month (MM):</label>
+            <input type="number" id="multi-gen-mm" placeholder="Leave blank to randomize" min="1" max="12">
+          </div>
+          <div>
+            <label>Year (YY):</label>
+            <input type="number" id="multi-gen-yy" placeholder="Leave blank to randomize" min="25" max="99">
+          </div>
+          <div>
+            <label>CVV:</label>
+            <input type="number" id="multi-gen-cvv" placeholder="Leave blank to randomize" min="100" max="999">
+          </div>
+        </div>
+
+        <div style="margin-bottom: 12px;">
+          <label>Cards per BIN:</label>
+          <input type="number" id="multi-gen-quantity" value="5" min="1" max="50">
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;">
+          <button class="pulse" style="background: var(--generator-gradient);"
+            onclick="generateMultipleBINCards()">Generate</button>
+          <button style="background: linear-gradient(135deg, #ef4444, #f87171);"
+            onclick="clearMultiGeneratorResults()">Clear</button>
+        </div>
+
+        <div id="multi-generator-results" class="hidden" style="margin-top: 15px;">
+          <h3>Generated Cards</h3>
+          <button class="pulse" style="background: linear-gradient(135deg, #4c1d95, #6d28d9);"
+            onclick="copyMultiGeneratedCards()">Copy All</button>
+          <textarea id="multi-generated-cards" readonly style="margin-top: 8px;"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div id="card-checker-screen" class="hidden">
+      <div class="card">
+        <button class="back-arrow" onclick="showScreen('main-screen')" title="Back to Main">←</button>
+        <h2>Card Checker</h2>
+        <p></p>
+
+        <textarea id="cards-input" placeholder="One card per line, format: CC|MM|YY|CVV"></textarea>
+
+        <div style="display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; align-items: center;">
+          <button class="pulse" onclick="checkCards()">Check</button>
+          <button onclick="document.getElementById('cards-file-import').click()">Import</button>
+          <input type="file" id="cards-file-import" style="display: none" onchange="importCardsFile(this)"
+            accept=".txt,.csv" />
+          <button onclick="clearCardResults()">Clear</button>
+          <div class="module-select-container">
+            <div class="custom-select-wrapper">
+              <div class="custom-select">
+                <div class="custom-select__trigger"><span>Luhn</span>
+                  <div class="arrow"></div>
+                </div>
+                <div class="custom-options">
+                  <span class="custom-option selected" data-value="Luhn">Luhn</span>
+                </div>
+              </div>
+              <select id="cc-module-select" style="display: none;">
+                <option value="Luhn">Luhn</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div id="card-results">
+          <div id="card-check-spinner" class="hidden"></div>
+          <div id="card-check-results" class="card-checker-results"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="bin-generator-screen" class="hidden">
+      <div class="card">
+        <button class="back-arrow" onclick="showScreen('main-screen')" title="Back to Main">←</button>
+        <h2>BIN Generator</h2>
+
+        <div style="margin-bottom: 12px;">
+          <label>Card Type:</label>
+          <div class="custom-select-wrapper" style="width: 100%;">
+            <div class="custom-select">
+              <div class="custom-select__trigger"><span>Visa</span>
+                <div class="arrow"></div>
+              </div>
+              <div class="custom-options">
+                <span class="custom-option selected" data-value="Visa">Visa</span>
+                <span class="custom-option" data-value="MasterCard">MasterCard</span>
+                <span class="custom-option" data-value="Amex">Amex</span>
+                <span class="custom-option" data-value="Discover">Discover</span>
+              </div>
+            </div>
+            <select id="bin-gen-type" style="display: none;">
+              <option value="Visa">Visa</option>
+              <option value="MasterCard">MasterCard</option>
+              <option value="Amex">Amex</option>
+              <option value="Discover">Discover</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 12px;">
+          <label>Quantity:</label>
+          <input type="number" id="bin-gen-quantity" value="10" min="1" max="100">
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;">
+          <button class="pulse" style="background: var(--bin-generator-gradient);"
+            onclick="generateBINs()">Generate</button>
+          <button style="background: linear-gradient(135deg, #ef4444, #f87171);"
+            onclick="clearBINGeneratorResults()">Clear</button>
+        </div>
+
+        <div id="bin-generator-results" class="hidden" style="margin-top: 15px;">
+          <h3>Generated BINs</h3>
+          <button class="pulse" style="background: linear-gradient(135deg, #4c1d95, #6d28d9);"
+            onclick="copyGeneratedBINs()">Copy All</button>
+          <button class="pulse" style="background: linear-gradient(135deg, #2dd4bf, #14b8a6);"
+            onclick="downloadGeneratedBINs()">Download Results</button>
+          <textarea id="generated-bins" readonly style="margin-top: 8px;"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    console.log('Credit Card Tools script loaded.');
+
+    // Custom Select Logic
+    document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
+      const select = wrapper.querySelector('.custom-select');
+      const trigger = select.querySelector('.custom-select__trigger');
+      const options = select.querySelectorAll('.custom-option');
+      const hiddenSelect = wrapper.querySelector('select');
+
+      trigger.addEventListener('click', () => {
+        select.classList.toggle('open');
+      });
+
+      options.forEach(option => {
+        option.addEventListener('click', function () {
+          select.classList.remove('open');
+          options.forEach(opt => opt.classList.remove('selected'));
+          this.classList.add('selected');
+          trigger.querySelector('span').textContent = this.textContent;
+
+          if (hiddenSelect) {
+            hiddenSelect.value = this.getAttribute('data-value');
+            hiddenSelect.dispatchEvent(new Event('change'));
+          }
+        });
+      });
+    });
+
+    window.addEventListener('click', (e) => {
+      document.querySelectorAll('.custom-select').forEach(select => {
+        if (!select.contains(e.target)) {
+          select.classList.remove('open');
+        }
+      });
+    });
+
+    const cardCheckCache = new Map();
+
+    function showScreen(screenId) {
+      if (window.isTransitioning) return;
+      window.isTransitioning = true;
+
+      const allScreens = {
+        'main-screen': document.getElementById('main-screen'),
+        'bin-checker-screen': document.getElementById('bin-checker-screen'),
+        'card-generator-screen': document.getElementById('card-generator-screen'),
+        'card-checker-screen': document.getElementById('card-checker-screen'),
+        'bin-generator-screen': document.getElementById('bin-generator-screen'),
+        'settings-screen': document.getElementById('settings-screen')
+      };
+
+      let currentScreen = null;
+      Object.values(allScreens).forEach(screen => {
+        if (!screen.classList.contains('hidden')) {
+          currentScreen = screen;
+        }
+      });
+
+      const targetScreen = allScreens[screenId];
+      const animationDuration = 300;
+
+      if (currentScreen && currentScreen.id !== screenId) {
+        currentScreen.style.transition = `opacity ${animationDuration / 1000}s ease, transform ${animationDuration / 1000}s ease`;
+        currentScreen.style.opacity = '0';
+        currentScreen.style.transform = 'translateX(-20px)';
+
+        setTimeout(() => {
+          currentScreen.classList.add('hidden');
+          targetScreen.style.transition = 'none';
+          targetScreen.style.opacity = '0';
+          targetScreen.style.transform = 'translateX(20px)';
+          targetScreen.classList.remove('hidden');
+
+          void targetScreen.offsetWidth;
+
+          targetScreen.style.transition = `opacity ${animationDuration / 1000}s ease, transform ${animationDuration / 1000}s ease`;
+          targetScreen.style.opacity = '1';
+          targetScreen.style.transform = 'translateX(0)';
+
+          setTimeout(() => {
+            window.isTransitioning = false;
+          }, animationDuration);
+        }, animationDuration);
+      }
+      else {
+        targetScreen.classList.remove('hidden');
+        targetScreen.style.opacity = '1';
+        targetScreen.style.transform = 'translateX(0)';
+        window.isTransitioning = false;
+      }
+    }
+
+    async function checkBIN() {
+      const binInput = document.getElementById('bin-input').value;
+      const resultsDiv = document.getElementById('bin-results');
+      const source = (document.getElementById('bin-source-select')?.value) || 'csv';
+
+      if (!binInput.trim()) {
+        resultsDiv.innerHTML = '<div class="result-card" style="color: #fc8181;">Please enter at least one BIN</div>';
+        return;
+      }
+
+      const bins = binInput.split(/[\s,;]+/)
+        .map(bin => bin.replace(/\D/g, '').trim())
+        .filter(bin => bin.length >= 6)
+        .map(bin => bin.substring(0, 6));
+
+      if (bins.length === 0) {
+        resultsDiv.innerHTML = '<div class="result-card" style="color: #fc8181;">No valid BINs found</div>';
+        return;
+      }
+
+      resultsDiv.innerHTML = `
+        <div class="loading-container">
+          <div class="loading-spinner"></div>
+          <p>${source === 'api' ? 'Fetching from API...' : 'Loading BIN data...'}</p>
+          <p style="font-size: 0.8em; margin-top: 10px;">Processing ${bins.length} BIN${bins.length > 1 ? 's' : ''}</p>
+        </div>
+      `;
+
+      if (source === 'api') {
+        try {
+          const responses = await Promise.all(bins.map(async (bin) => {
+            const url = `https://bin-ip-checker.p.rapidapi.com/?bin=${encodeURIComponent(bin)}`;
+            const resp = await fetch(url, {
+              headers: {
+                'x-rapidapi-key': 'e2c408cee0msh68e8e82404ebc6ap16701ajsn57c892d3becd',
+                'x-rapidapi-host': 'bin-ip-checker.p.rapidapi.com'
+              }
+            });
+            if (!resp.ok) throw new Error(`API error ${resp.status}`);
+            const json = await resp.json();
+            return { bin, json };
+          }));
+
+          let results = '';
+          for (const { bin, json } of responses) {
+            const info = json?.BIN || {};
+            const issuer = info.issuer || {};
+            const country = info.country || {};
+
+            const brand = info.brand || 'Unknown';
+            const type = info.type || 'Unknown';
+            const level = info.level || 'Unknown';
+            const issuerName = issuer.name || 'Unknown';
+            const issuerPhone = issuer.phone ? `( ${issuer.phone} )` : '';
+            const countryName = country.country || 'Unknown';
+            const countryCode = country.alpha2 ? ` (${country.alpha2})` : '';
+
+            results += `
+              <div class="bin-result-card-modern">
+                <div class="bin-header-modern">
+                  <div class="bin-number-modern">${bin}</div>
+                  <div class="bin-badge badge-scheme">${brand}</div>
+                </div>
+                <div class="bin-grid-modern">
+                  <div class="bin-item-modern">
+                    <span class="bin-label-modern">Type</span>
+                    <span class="bin-value-modern">${type}</span>
+                  </div>
+                  <div class="bin-item-modern">
+                    <span class="bin-label-modern">Level</span>
+                    <span class="bin-value-modern">${level}</span>
+                  </div>
+                  <div class="bin-item-modern" style="grid-column: span 2;">
+                    <span class="bin-label-modern">Bank / Issuer</span>
+                    <span class="bin-value-modern" style="color: #a78bfa;">${issuerName} ${issuerPhone}</span>
+                  </div>
+                  <div class="bin-item-modern" style="grid-column: span 2;">
+                    <span class="bin-label-modern">Country</span>
+                    <span class="bin-value-modern">
+                      ${countryName}${countryCode}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+
+          results += `
+            <div style="display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;">
+              <button class="pulse" style="background: linear-gradient(135deg, #4c1d95, #6d28d9);" onclick="copyBINResults()">Copy All</button>
+              <button class="pulse" style="background: linear-gradient(135deg, #2dd4bf, #14b8a6);" onclick="downloadBINResults()">Download Results</button>
+            </div>
+          `;
+
+          resultsDiv.innerHTML = results;
+        } catch (error) {
+          resultsDiv.innerHTML = `<div class="result-card" style="color:#fc8181;">API error: ${error.message}</div>`;
+        }
+        return;
+      }
+
+      // CSV path source (default)
+      try {
+        const response = await fetch('./bins.csv', { cache: 'force-cache' });
+        const data = await response.text();
+        const rows = data.split('\n').filter(row => row.trim());
+        const headers = rows[0].split(',').map(header => header.trim());
+        let binMap = new Map();
+        for (let i = 1; i < rows.length; i++) {
+          const columns = rows[i].split(',').map(col => col.trim().replace(/"/g, ''));
+          const csvBin = columns[0];
+          if (csvBin) {
+            let binInfo = {};
+            headers.forEach((header, index) => { binInfo[header] = columns[index] || 'Unknown'; });
+            binMap.set(csvBin, binInfo);
+          }
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 600));
+
+        let results = '';
+        bins.forEach(bin => {
+          const binInfo = binMap.get(bin);
+          if (binInfo) {
+            const brand = binInfo.Brand || 'Unknown';
+            const type = binInfo.Type || 'Unknown';
+            const category = binInfo.Category || 'Unknown'; // Level
+            const issuer = binInfo.Issuer || 'Unknown';
+            const country = binInfo.CountryName || 'Unknown';
+            const iso = binInfo.isocode || ''; // Assuming isocode might be in CSV, if not, ignore
+
+            results += `
+              <div class="bin-result-card-modern">
+                <div class="bin-header-modern">
+                  <div class="bin-number-modern">${bin}</div>
+                  <div class="bin-badge badge-scheme">${brand}</div>
+                </div>
+                <div class="bin-grid-modern">
+                  <div class="bin-item-modern">
+                    <span class="bin-label-modern">Type</span>
+                    <span class="bin-value-modern">${type}</span>
+                  </div>
+                  <div class="bin-item-modern">
+                    <span class="bin-label-modern">Level</span>
+                    <span class="bin-value-modern">${category}</span>
+                  </div>
+                  <div class="bin-item-modern" style="grid-column: span 2;">
+                    <span class="bin-label-modern">Bank / Issuer</span>
+                    <span class="bin-value-modern" style="color: #a78bfa;">${issuer}</span>
+                  </div>
+                  <div class="bin-item-modern" style="grid-column: span 2;">
+                    <span class="bin-label-modern">Country</span>
+                    <span class="bin-value-modern">
+                      ${country}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            `;
+          } else {
+            results += `
+              <div class="bin-result-card-modern" style="border-color: rgba(239, 68, 68, 0.3);">
+                <div class="bin-header-modern" style="margin-bottom: 0;">
+                  <div class="bin-number-modern" style="color: #ef4444;">${bin}</div>
+                  <div class="bin-badge" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">Not Found</div>
+                </div>
+              </div>
+            `;
+          }
+        });
+
+        results += `
+          <div style=\"display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap;\">
+            <button class=\"pulse\" style=\"background: linear-gradient(135deg, #4c1d95, #6d28d9);\" onclick=\"copyBINResults()\">Copy All</button>
+            <button class=\"pulse\" style=\"background: linear-gradient(135deg, #2dd4bf, #14b8a6);\" onclick=\"downloadBINResults()\">Download Results</button>
+          </div>
+          <div style=\"margin-top: 15px; font-size: 0.8em; color: #718096; text-align: center;\">
+            Database: ${rows.length - 1} BINs | Checked: ${bins.length} queries
+          </div>
+        `;
+
+        resultsDiv.innerHTML = results;
+      } catch (error) {
+        await new Promise(resolve => setTimeout(resolve, 600));
+        resultsDiv.innerHTML = `
+          <div class="result-card" style="color: #fc8181; text-align: center; padding: 20px;">
+            <div style="font-size: 1.1rem; font-weight: 600; margin-bottom: 8px;">Error loading BIN database</div>
+            <div style="font-size: 0.9rem; opacity: 0.8;">${error.message}</div>
+            <div style="margin-top: 15px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; font-size: 0.85rem; text-align: left;">
+              <strong>Troubleshooting:</strong>
+              <ul style="margin: 5px 0 0 20px; padding: 0;">
+                <li>Ensure <code>bins.csv</code> is in the same folder.</li>
+                <li>If opening <code>index.html</code> directly, browsers block file access.</li>
+                <li>Try running the included server: <code>node server.js</code></li>
+              </ul>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function copyBINResults() {
+      const resultsDiv = document.getElementById('bin-results');
+      const resultCards = resultsDiv.getElementsByClassName('bin-result-card-modern');
+      let textToCopy = '';
+
+      Array.from(resultCards).forEach(card => {
+        const bin = card.querySelector('.bin-number-modern')?.textContent || '';
+        if (!bin) return;
+
+        const brand = card.querySelector('.badge-scheme')?.textContent || 'Unknown';
+
+        const getValue = (label) => {
+          const items = Array.from(card.querySelectorAll('.bin-item-modern'));
+          const item = items.find(i => i.querySelector('.bin-label-modern')?.textContent.trim() === label);
+          return item ? item.querySelector('.bin-value-modern')?.textContent.trim().replace(/\s+/g, ' ') : 'Unknown';
+        };
+
+        const type = getValue('Type');
+        const category = getValue('Level');
+        const issuer = getValue('Bank / Issuer');
+        const country = getValue('Country');
+
+        textToCopy += `BIN: ${bin}\nBrand: ${brand}\nType: ${type}\nCategory: ${category}\nIssuer: ${issuer}\nCountry: ${country}\n\n`;
+      });
+
+      const textarea = document.createElement('textarea');
+      textarea.value = textToCopy.trim();
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      showToast('BIN results copied to clipboard!');
+    }
+
+    function downloadBINResults() {
+      const resultsDiv = document.getElementById('bin-results');
+      const resultCards = resultsDiv.getElementsByClassName('bin-result-card-modern');
+      let textToDownload = '';
+
+      Array.from(resultCards).forEach(card => {
+        const bin = card.querySelector('.bin-number-modern')?.textContent || '';
+        if (!bin) return;
+
+        const brand = card.querySelector('.badge-scheme')?.textContent || 'Unknown';
+
+        const getValue = (label) => {
+          const items = Array.from(card.querySelectorAll('.bin-item-modern'));
+          const item = items.find(i => i.querySelector('.bin-label-modern')?.textContent.trim() === label);
+          return item ? item.querySelector('.bin-value-modern')?.textContent.trim().replace(/\s+/g, ' ') : 'Unknown';
+        };
+
+        const type = getValue('Type');
+        const category = getValue('Level');
+        const issuer = getValue('Bank / Issuer');
+        const country = getValue('Country');
+
+        textToDownload += `BIN: ${bin}\nBrand: ${brand}\nType: ${type}\nCategory: ${category}\nIssuer: ${issuer}\nCountry: ${country}\n\n`;
+      });
+
+      const blob = new Blob([textToDownload.trim()], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      // derive filename from first BIN in input
+      const inputVal = (document.getElementById('bin-input')?.value || '').trim();
+      const bins = inputVal.split(/[\s,;]+/).map(b => b.replace(/\D/g, '').substring(0, 6)).filter(b => b.length === 6);
+      const firstBin = bins[0] || 'bin_results';
+      const extra = bins.length > 1 ? `_and_${bins.length - 1}_more` : '';
+      a.download = `${firstBin}${extra}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function clearBINResults() {
+      document.getElementById('bin-results').innerHTML = '';
+      document.getElementById('bin-input').value = '';
+    }
+
+    function clearCardResults() {
+      document.getElementById('card-check-spinner').classList.add('hidden');
+      document.getElementById('card-check-results').innerHTML = '';
+      document.getElementById('cards-input').value = '';
+      cardCheckCache.clear();
+    }
+
+    function clearGeneratorResults() {
+      document.getElementById('generator-results').classList.add('hidden');
+      document.getElementById('generated-cards').value = '';
+      document.getElementById('gen-bin').value = '';
+      // Removed gen-dd
+      document.getElementById('gen-mm').value = '';
+      document.getElementById('gen-yy').value = '';
+      document.getElementById('gen-cvv').value = '';
+      document.getElementById('gen-quantity').value = '10';
+    }
+
+    function generateCards() {
+      const bin = document.getElementById('gen-bin').value.replace(/\D/g, '');
+      // const dd = document.getElementById('gen-dd').value; // Removed from here
+      const mm = document.getElementById('gen-mm').value;
+      const yy = document.getElementById('gen-yy').value;
+      const cvv = document.getElementById('gen-cvv').value;
+      const quantity = parseInt(document.getElementById('gen-quantity').value) || 10;
+      const resultsArea = document.getElementById('generated-cards');
+      const resultsContainer = document.getElementById('generator-results');
+
+      if (bin.length < 6) {
+        showToast('Please enter at least 6 digits for the BIN');
+        return;
+      }
+
+      resultsContainer.classList.remove('hidden');
+      resultsArea.value = '';
+      resultsArea.parentNode.insertAdjacentHTML('afterbegin', `
+        <div id="generator-spinner" class="loading-container" style="margin-bottom: 15px;">
+          <div class="loading-spinner"></div>
+          <p>Generating cards...</p>
+          <p style="font-size: 0.8em; margin-top: 10px;">Creating ${quantity} card${quantity > 1 ? 's' : ''} with BIN ${bin}</p>
+        </div>
+      `);
+
+      setTimeout(() => {
+        const cards = [];
+        const currentYear = new Date().getFullYear();
+
+        for (let i = 0; i < quantity; i++) {
+          const cardNumber = generateCardNumber(bin);
+
+          // Month (MM)
+          const month = mm ? parseInt(mm) : Math.floor(Math.random() * 12) + 1;
+          const validMonth = String(Math.min(month, 12)).padStart(2, '0');
+
+          // Year (YYYY)
+          let year;
+          if (yy) {
+            year = parseInt(yy);
+            if (year < 100) { // Convert 2-digit year to 4-digit
+              year = (year < 70 ? 2000 + year : 1900 + year); // Assuming 20xx for YY >= 00 and YY < 70, 19xx for YY >= 70
+            }
+          } else {
+            year = currentYear + Math.floor(Math.random() * 5) + 1; // Random year between next year and next 5 years
+          }
+          const validYear = Math.max(year, currentYear); // Ensure year is not in the past
+
+          // CVV
+          const validCvv = cvv ? parseInt(cvv) : Math.floor(Math.random() * 900) + 100;
+
+          // Output format: cardnum|month|year|cvv
+          cards.push(`${cardNumber}|${validMonth}|${validYear}|${String(validCvv).padStart(3, '0')}`);
+        }
+
+        const spinner = document.getElementById('generator-spinner');
+        if (spinner) spinner.remove();
+
+        resultsArea.value = cards.join('\n');
+      }, 500);
+    }
+
+    function generateCardNumber(bin) {
+      let cardNumber = bin;
+      while (cardNumber.length < 15) {
+        cardNumber += Math.floor(Math.random() * 10);
+      }
+
+      let sum = 0;
+      let isEven = false;
+      for (let i = cardNumber.length - 1; i >= 0; i--) {
+        let digit = parseInt(cardNumber[i], 10);
+        if (isEven) {
+          digit *= 2;
+          if (digit > 9) digit -= 9;
+        }
+        sum += digit;
+        isEven = !isEven;
+      }
+      const checkDigit = (10 - (sum % 10)) % 10;
+
+      return cardNumber + checkDigit;
+    }
+
+    function copyGeneratedCards() {
+      const textarea = document.getElementById('generated-cards');
+      textarea.select();
+      document.execCommand('copy');
+      showToast('Cards copied to clipboard!');
+    }
+
+    function clearMultiGeneratorResults() {
+      document.getElementById('multi-generator-results').classList.add('hidden');
+      document.getElementById('multi-generated-cards').value = '';
+      document.getElementById('multi-gen-bins').value = '';
+      // Removed multi-gen-dd
+      document.getElementById('multi-gen-mm').value = '';
+      document.getElementById('multi-gen-yy').value = '';
+      document.getElementById('multi-gen-cvv').value = '';
+      document.getElementById('multi-gen-quantity').value = '5';
+    }
+
+    function copyMultiGeneratedCards() {
+      const textarea = document.getElementById('multi-generated-cards');
+      textarea.select();
+      document.execCommand('copy');
+      showToast('Cards copied to clipboard!');
+    }
+
+    function generateMultipleBINCards() {
+      const binsInput = document.getElementById('multi-gen-bins').value;
+      // const dd = document.getElementById('multi-gen-dd').value; // Removed from here
+      const mm = document.getElementById('multi-gen-mm').value;
+      const yy = document.getElementById('multi-gen-yy').value;
+      const cvv = document.getElementById('multi-gen-cvv').value;
+      const quantity = parseInt(document.getElementById('multi-gen-quantity').value) || 5;
+      const resultsArea = document.getElementById('multi-generated-cards');
+      const resultsContainer = document.getElementById('multi-generator-results');
+
+      if (!binsInput.trim()) {
+        showToast('Please enter at least one BIN');
+        return;
+      }
+
+      const bins = binsInput.split(/[\s,;]+/)
+        .map(bin => bin.replace(/\D/g, '').trim())
+        .filter(bin => bin.length >= 6)
+        .map(bin => bin.substring(0, 6));
+
+      if (bins.length === 0) {
+        showToast('No valid BINs found');
+        return;
+      }
+
+      resultsContainer.classList.remove('hidden');
+      resultsArea.value = '';
+      resultsContainer.insertAdjacentHTML('afterbegin', `
+        <div id="multi-generator-spinner" class="loading-container" style="margin-bottom: 15px;">
+          <div class="loading-spinner"></div>
+          <p>Generating cards...</p>
+          <p style="font-size: 0.8em; margin-top: 10px;">Creating ${quantity} cards for each of ${bins.length} BINs</p>
+        </div>
+      `);
+
+      setTimeout(() => {
+        const allCards = [];
+        const currentYear = new Date().getFullYear();
+
+        bins.forEach(bin => {
+          for (let i = 0; i < quantity; i++) {
+            const cardNumber = generateCardNumber(bin);
+
+            // Month (MM)
+            const month = mm ? parseInt(mm) : Math.floor(Math.random() * 12) + 1;
+            const validMonth = String(Math.min(month, 12)).padStart(2, '0');
+
+            // Year (YYYY)
+            let year;
+            if (yy) {
+              year = parseInt(yy);
+              if (year < 100) { // Convert 2-digit year to 4-digit
+                year = (year < 70 ? 2000 + year : 1900 + year); // Assuming 20xx for YY >= 00 and YY < 70, 19xx for YY >= 70
+              }
+            } else {
+              year = currentYear + Math.floor(Math.random() * 5) + 1; // Random year between next year and next 5 years
+            }
+            const validYear = Math.max(year, currentYear); // Ensure year is not in the past
+
+            // CVV
+            const validCvv = cvv ? parseInt(cvv) : Math.floor(Math.random() * 900) + 100;
+
+            // Output format: cardnum|month|year|cvv
+            allCards.push(`${cardNumber}|${validMonth}|${validYear}|${String(validCvv).padStart(3, '0')}`);
+          }
+        });
+
+        const spinner = document.getElementById('multi-generator-spinner');
+        if (spinner) spinner.remove();
+
+        resultsArea.value = allCards.join('\n');
+      }, 500);
+    }
+
+    async function checkCards() {
+      try {
+        const cardsInput = document.getElementById('cards-input').value;
+        const spinnerDiv = document.getElementById('card-check-spinner');
+        const resultsDiv = document.getElementById('card-check-results');
+
+        if (!cardsInput.trim()) {
+          resultsDiv.innerHTML = '<div class="result-card" style="color: #fc8181;">Please enter at least one card</div>';
+          return;
+        }
+
+        const cards = cardsInput.split('\n').filter(card => card.trim());
+        if (cards.length === 0) {
+          resultsDiv.innerHTML = '<div class="result-card" style="color: #fc8181;">No valid cards found</div>';
+          return;
+        }
+
+        spinnerDiv.innerHTML = `
+          <div class="loading-container">
+            <div class="loading-spinner"></div>
+            <p>Validating cards...</p>
+            <p style="font-size: 0.8em; margin-top: 10px;">Processing ${cards.length} card${cards.length > 1 ? 's' : ''}</p>
+          </div>
+        `;
+        spinnerDiv.classList.remove('hidden');
+        resultsDiv.innerHTML = '';
+
+        let checkedCount = 0;
+        const liveCards = [];
+        const deadCards = [];
+        const unknownCards = [];
+
+        for (const card of cards) {
+          checkedCount++;
+          let cardNumber, expiry, cvv;
+
+          if (card.includes('|')) {
+            const parts = card.split('|');
+            cardNumber = parts[0].replace(/\D/g, '');
+
+            // Assuming format is cardnum|MM|YYYY|CVV
+            if (parts.length >= 4) {
+              expiry = `${parts[1]}|${parts[2]}`; // MM|YYYY
+              cvv = parts[3];
+            } else if (parts.length >= 3) { // Fallback for older formats or partial inputs
+              // Try to infer MM|YY or MM/YY
+              const expiryPart = parts[1];
+              const cvvPart = parts[2];
+
+              if (expiryPart.includes('/') || expiryPart.includes('|')) {
+                expiry = expiryPart;
+                cvv = cvvPart;
+              } else { // Assume MM and YY are separate parts[1] and parts[2]
+                expiry = `${parts[1]}|${parts[2]}`;
+                cvv = parts[3]; // This might be undefined if only 3 parts
+              }
+            }
+          } else {
+            const matches = card.match(/\d+/g) || [];
+            if (matches.length > 0) {
+              const cardNumbers = matches.filter(m => m.length >= 13 && m.length <= 19);
+              if (cardNumbers.length > 0) {
+                cardNumber = cardNumbers[0];
+                // Attempt to find MM|YYYY or MM|YY
+                const expiryMatch = card.match(/(\d{1,2})[\/\|](\d{2,4})/);
+                if (expiryMatch) {
+                  expiry = expiryMatch[0].replace('/', '|');
+                }
+                const nonCardNumberMatches = matches.filter(m => m !== cardNumber && !expiry?.includes(m));
+                const possibleCvvs = nonCardNumberMatches.filter(m => m.length >= 3 && m.length <= 4);
+                if (possibleCvvs.length > 0) {
+                  cvv = possibleCvvs[0];
+                }
+              }
+            }
+          }
+
+          const cardKey = `${cardNumber || 'invalid'}|${expiry || 'invalid'}|${cvv || 'invalid'}`;
+
+          let result;
+          if (cardCheckCache.has(cardKey)) {
+            result = cardCheckCache.get(cardKey);
+          } else {
+            let status, statusColor, message;
+            if (!cardNumber || cardNumber.length < 13 || cardNumber.length > 19 || !expiry || !cvv) {
+              status = 'Unknown';
+              statusColor = '#fc8181';
+              message = 'Invalid format';
+            } else {
+              const isCardValid = validateWithSelectedModule(cardNumber);
+              status = isCardValid ? 'Live' : 'Dead';
+              statusColor = isCardValid ? '#68d391' : '#fc8181';
+              message = isCardValid ? 'Valid (Luhn)' : 'Invalid (Luhn)';
+            }
+
+            result = {
+              cardNumber: cardNumber || 'Invalid',
+              expiry: expiry || 'Not found',
+              cvv: cvv || 'Not found',
+              status,
+              statusColor,
+              message
+            };
+            cardCheckCache.set(cardKey, result);
+          }
+
+          const cardHtml = `
+            <div class="result-card">
+              <p><strong>Card Number:</strong> ${formatCardNumber(result.cardNumber)}</p>
+              <p><strong>Expiry:</strong> ${result.expiry}</p>
+              <p><strong>CVV:</strong> ${result.cvv}</p>
+              <p><strong>Status:</strong> <span style="color: ${result.statusColor};">${result.status}</span></p>
+              <p><strong>Message:</strong> ${result.message}</p>
+              <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:10px;">
+                <button onclick="copyResultCardNumber(this)">Copy Card</button>
+                <button onclick="copyResultCardAll(this)">Copy All</button>
+              </div>
+            </div>
+          `;
+
+          if (result.status === 'Live') {
+            liveCards.push(cardHtml);
+          } else {
+            // Merge Unknown into Dead
+            deadCards.push(cardHtml);
+          }
+
+          const remaining = cards.length - checkedCount;
+          spinnerDiv.innerHTML = `
+            <div class="loading-container">
+              <div class="loading-spinner"></div>
+              <p>Validating cards...</p>
+              <p style="font-size: 0.8em; margin-top: 10px;">${remaining} card${remaining !== 1 ? 's' : ''} remaining</p>
+            </div>
+          `;
+        }
+
+        let resultsHtml = '<div class="result-sections" style="display: flex; gap: 20px; flex-wrap: wrap;">';
+
+        resultsHtml += `
+          <div class="result-section live" style="flex: 1; min-width: 300px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <h3 style="margin: 0; font-size: 1.1rem; color: #22c55e;">Live Cards (${liveCards.length})</h3>
+            </div>
+            
+            ${liveCards.length > 0 ? `
+              <div style="height: 1px; background: rgba(39, 39, 42, 0.5); margin-bottom: 15px;"></div>
+            ` : ''}
+            
+            ${liveCards.length > 0 ? liveCards.join('') : '<p style="color: #718096;">No live cards found.</p>'}
+          </div>
+        `;
+
+        resultsHtml += `
+          <div class="result-section dead" style="flex: 1; min-width: 300px;">
+            <h3>Dead / Unknown (${deadCards.length})</h3>
+            ${deadCards.length > 0 ? deadCards.join('') : '<p style="color: #718096;">No dead cards found.</p>'}
+          </div>
+        `;
+
+        resultsHtml += '</div>';
+
+        spinnerDiv.classList.add('hidden');
+
+        // Show action buttons if there are live cards (guard missing container)
+        const actionsDiv = document.getElementById('card-result-actions');
+        if (actionsDiv) {
+          if (liveCards.length > 0) {
+            actionsDiv.classList.remove('hidden');
+            actionsDiv.innerHTML = `
+                 <button class="pulse" style="background: linear-gradient(135deg, #4c1d95, #6d28d9);" onclick="copyLiveCards()">Copy Live</button>
+                 <button class="pulse" style="background: linear-gradient(135deg, #2dd4bf, #14b8a6);" onclick="downloadLiveCards()">Download Live</button>
+                 <button class="pulse" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa);" onclick="copyLiveCardsOnly()">Copy Cards</button>
+            `;
+          } else {
+            actionsDiv.classList.add('hidden');
+          }
+        }
+
+        resultsDiv.innerHTML = resultsHtml;
+      } catch (error) {
+        console.error("Error checking cards:", error);
+        document.getElementById('card-check-spinner').classList.add('hidden');
+        showToast("An error occurred while checking cards.");
+      }
+    }
+
+    function validateCardNumber(cardNumber) {
+      if (!cardNumber || cardNumber.length < 13 || cardNumber.length > 19) {
+        return false;
+      }
+
+      const digits = cardNumber.split('').map(Number);
+      let sum = 0;
+      let isEven = false;
+
+      for (let i = digits.length - 1; i >= 0; i--) {
+        let digit = digits[i];
+
+        if (isEven) {
+          digit *= 2;
+          if (digit > 9) {
+            digit -= 9;
+          }
+        }
+
+        sum += digit;
+        isEven = !isEven;
+      }
+
+      return sum % 10 === 0;
+    }
+
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      if (!container) return alert(message);
+      const t = document.createElement('div');
+      t.className = 'toast';
+      t.textContent = message;
+      container.appendChild(t);
+      requestAnimationFrame(() => t.classList.add('show'));
+      setTimeout(() => {
+        t.classList.remove('show');
+        setTimeout(() => t.remove(), 300);
+      }, 5000);
+    }
+
+    function validateWithSelectedModule(cardNumber) {
+      try {
+        const sel = document.getElementById('cc-module-select');
+        const moduleName = sel ? sel.value : 'Luhn';
+
+        // Explicitly handle 'Luhn' to ensure it works even if module loading fails
+        if (moduleName === 'Luhn') {
+          return validateCardNumber(cardNumber);
+        }
+
+        if (window.CardCheckModules && window.CardCheckModules[moduleName] && typeof window.CardCheckModules[moduleName].validate === 'function') {
+          return window.CardCheckModules[moduleName].validate(cardNumber);
+        }
+      } catch (e) {
+        console.error("Validation module error:", e);
+      }
+      // Fallback to internal Luhn check
+      return validateCardNumber(cardNumber);
+    }
+
+    function formatCardNumber(cardNumber) {
+      return cardNumber.replace(/(\d{4})(?=\d)/g, '$1 ');
+    }
+
+    function importBINFile(fileInput) {
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const content = e.target.result;
+        const bins = content.split(/[\r\n]+/)
+          .map(line => line.trim())
+          .filter(line => line.length > 0);
+
+        document.getElementById('bin-input').value = bins.join('\n');
+        fileInput.value = '';
+      };
+      reader.readAsText(file);
+    }
+
+    function importCardsFile(fileInput) {
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const content = e.target.result;
+        const cards = content.split(/[\r\n]+/)
+          .map(line => line.trim())
+          .filter(line => line.length > 0);
+
+        document.getElementById('cards-input').value = cards.join('\n');
+        fileInput.value = '';
+      };
+      reader.readAsText(file);
+    }
+
+    function generateBINs() {
+      const cardType = document.getElementById('bin-gen-type').value;
+      const quantity = parseInt(document.getElementById('bin-gen-quantity').value) || 10;
+      const resultsArea = document.getElementById('generated-bins');
+      const resultsContainer = document.getElementById('bin-generator-results');
+
+      if (quantity < 1 || quantity > 100) {
+        showToast('Please enter a quantity between 1 and 100');
+        return;
+      }
+
+      resultsContainer.classList.remove('hidden');
+      resultsArea.value = '';
+      resultsArea.parentNode.insertAdjacentHTML('afterbegin', `
+        <div id="bin-generator-spinner" class="loading-container" style="margin-bottom: 15px;">
+          <div class="loading-spinner"></div>
+          <p>Generating BINs...</p>
+          <p style="font-size: 0.8em; margin-top: 10px;">Creating ${quantity} BIN${quantity > 1 ? 's' : ''} for ${cardType}</p>
+        </div>
+      `);
+
+      setTimeout(() => {
+        const bins = [];
+        const prefixes = {
+          Visa: ['4'],
+          MasterCard: ['51', '52', '53', '54', '55'],
+          Amex: ['34', '37'],
+          Discover: ['6011', '65']
+        };
+
+        const selectedPrefixes = prefixes[cardType];
+        for (let i = 0; i < quantity; i++) {
+          const prefix = selectedPrefixes[Math.floor(Math.random() * selectedPrefixes.length)];
+          let bin = prefix;
+          while (bin.length < 6) {
+            bin += Math.floor(Math.random() * 10);
+          }
+          bins.push(bin);
+        }
+
+        const spinner = document.getElementById('bin-generator-spinner');
+        if (spinner) spinner.remove();
+
+        resultsArea.value = bins.join('\n');
+      }, 2000);
+    }
+
+    function clearBINGeneratorResults() {
+      document.getElementById('bin-generator-results').classList.add('hidden');
+      document.getElementById('generated-bins').value = '';
+      document.getElementById('bin-gen-type').value = 'Visa';
+      document.getElementById('bin-gen-quantity').value = '10';
+    }
+
+    function copyGeneratedBINs() {
+      const textarea = document.getElementById('generated-bins');
+      textarea.select();
+      document.execCommand('copy');
+      showToast('BINs copied to clipboard!');
+    }
+
+    function downloadGeneratedBINs() {
+      const textarea = document.getElementById('generated-bins');
+      const blob = new Blob([textarea.value], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'generated_bins.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function copyLiveCards() {
+      const resultsDiv = document.getElementById('card-check-results');
+      const liveCards = resultsDiv.querySelector('.result-section.live').getElementsByClassName('result-card');
+      let textToCopy = '';
+
+      Array.from(liveCards).forEach(card => {
+        const cardNumber = card.querySelector('p:nth-child(1)')?.textContent.replace('Card Number: ', '').trim() || '';
+        const expiry = card.querySelector('p:nth-child(2)')?.textContent.replace('Expiry: ', '').trim() || '';
+        const cvv = card.querySelector('p:nth-child(3)')?.textContent.replace('CVV: ', '').trim() || '';
+        const status = card.querySelector('p:nth-child(4)')?.textContent.replace('Status: ', '').trim() || '';
+        const message = card.querySelector('p:nth-child(5)')?.textContent.replace('Message: ', '').trim() || '';
+
+        textToCopy += `Card Number: ${cardNumber}\nExpiry: ${expiry}\nCVV: ${cvv}\nStatus: ${status}\nMessage: ${message}\n\n`;
+      });
+
+      const textarea = document.createElement('textarea');
+      textarea.value = textToCopy.trim();
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      showToast('Live cards copied!');
+    }
+
+    function downloadLiveCards() {
+      const resultsDiv = document.getElementById('card-check-results');
+      const liveCards = resultsDiv.querySelector('.result-section.live').getElementsByClassName('result-card');
+      let textToDownload = '';
+
+      Array.from(liveCards).forEach(card => {
+        const cardNumber = card.querySelector('p:nth-child(1)')?.textContent.replace('Card Number: ', '').trim() || '';
+        const expiry = card.querySelector('p:nth-child(2)')?.textContent.replace('Expiry: ', '').trim() || '';
+        const cvv = card.querySelector('p:nth-child(3)')?.textContent.replace('CVV: ', '').trim() || '';
+        const status = card.querySelector('p:nth-child(4)')?.textContent.replace('Status: ', '').trim() || '';
+        const message = card.querySelector('p:nth-child(5)')?.textContent.replace('Message: ', '').trim() || '';
+
+        textToDownload += `Card Number: ${cardNumber}\nExpiry: ${expiry}\nCVV: ${cvv}\nStatus: ${status}\nMessage: ${message}\n\n`;
+      });
+
+      const blob = new Blob([textToDownload.trim()], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'live_cards.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function copyLiveCardsOnly() {
+      const resultsDiv = document.getElementById('card-check-results');
+      const liveCards = resultsDiv.querySelector('.result-section.live').getElementsByClassName('result-card');
+      let textToCopy = '';
+
+      Array.from(liveCards).forEach(card => {
+        const cardNumber = card.querySelector('p:nth-child(1)')?.textContent.replace('Card Number: ', '').trim().replace(/\s/g, '') || '';
+        if (cardNumber) {
+          textToCopy += `${cardNumber}\n`;
+        }
+      });
+
+      const textarea = document.createElement('textarea');
+      textarea.value = textToCopy.trim();
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      showToast('Live card numbers copied!');
+    }
+
+    function downloadLiveCardsOnly() {
+      const resultsDiv = document.getElementById('card-check-results');
+      const liveCards = resultsDiv.querySelector('.result-section.live').getElementsByClassName('result-card');
+      let textToDownload = '';
+
+      Array.from(liveCards).forEach(card => {
+        const cardNumber = card.querySelector('p:nth-child(1)')?.textContent.replace('Card Number: ', '').trim().replace(/\s/g, '') || '';
+        if (cardNumber) {
+          textToDownload += `${cardNumber}\n`;
+        }
+      });
+
+      const blob = new Blob([textToDownload.trim()], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'live_cards_only.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function copyResultCardNumber(buttonEl) {
+      const cardEl = buttonEl.closest('.result-card');
+      if (!cardEl) return;
+      const cardNumberText = (cardEl.querySelector('p')?.textContent || '').replace('Card Number:', '').trim().replace(/\s+/g, '');
+      if (!cardNumberText) return showToast('No card number found');
+      const ta = document.createElement('textarea');
+      ta.value = cardNumberText;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Card number copied');
+    }
+
+    function copyResultCardAll(buttonEl) {
+      const cardEl = buttonEl.closest('.result-card');
+      if (!cardEl) return;
+      const lines = Array.from(cardEl.querySelectorAll('p')).map(p => p.textContent.trim());
+      const ta = document.createElement('textarea');
+      ta.value = lines.join('\n');
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Result copied');
+    }
+  </script>
+  <script src="modules/Luhn.js"></script>
+  <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'938d24a3dc73bd46',t:'MTc0NjA4MDExMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+</body>
+
+</html>
